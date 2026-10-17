@@ -21,6 +21,14 @@ export class Sound {
   constructor() { this.muted = false; this.ac = null; this.master = null; }
   async init() {
     try {
+      if (!this.visibilityBound) {
+        this.visibilityBound = true;
+        document.addEventListener('visibilitychange', () => {
+          if (!this.ac) return;
+          if (document.hidden && this.ac.state === 'running') this.ac.suspend().catch(() => {});
+          else if (!document.hidden && !this.muted && this.ac.state === 'suspended') this.ac.resume().catch(() => {});
+        });
+      }
       if (!this.ac || this.ac.state === 'closed') {
         this.ac = new (window.AudioContext || window.webkitAudioContext)();
         this.master = this.ac.createGain(); this.master.gain.value = this.muted ? 0 : .75;
@@ -32,10 +40,10 @@ export class Sound {
   mute(value) { this.muted = value; if (this.master) this.master.gain.setTargetAtTime(value ? 0 : .75, this.ac.currentTime, .02); }
   play(cue) {
     if (!this.ac || this.muted || this.ac.state !== 'running') return;
-    const { duration = .2, volume = .15, delay = 0, attack = .005 } = cue;
+    const { duration = .2, volume = .15, delay = 0, attack = cue.noise ? .003 : .005 } = cue;
     const t = this.ac.currentTime + delay, gain = this.ac.createGain();
-    gain.gain.setValueAtTime(.0001, t);
-    gain.gain.exponentialRampToValueAtTime(volume, t + attack);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(volume, t + attack);
     gain.gain.exponentialRampToValueAtTime(.0001, t + duration + attack);
     gain.connect(this.master);
     let source;
@@ -61,6 +69,12 @@ export class Sound {
     output.connect(gain); source.start(t); source.stop(t + duration + attack + .1);
   }
   event(name) {
+    if (document.hidden) return;
+    if (this.ac?.state === 'suspended' && !this.muted) {
+      const started = performance.now();
+      this.ac.resume().then(() => { if (performance.now() - started < 250 && this.ac.state === 'running') this.event(name); }).catch(() => {});
+      return;
+    }
     const aliases = { plankton: 'small', tooclever: 'small', schooler: 'big', rare: 'big', deepcut: 'big', descend: 'begin' };
     if (name === 'blub') {
       const variation = .85 + Math.random() * .45;

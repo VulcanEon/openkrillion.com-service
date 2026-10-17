@@ -190,3 +190,20 @@ body[data-phase="done"] .mascot{z-index:15}
 @media(prefers-reduced-motion:reduce){.prompt-card.leaving{animation-duration:.01ms}}
 
 @media(max-width:699px){.result-header{padding-left:38px;font-size:10px;gap:8px}.result-brand{font-size:22px}}
+
+/* Companion motion is applied to the sprite, independently of camera follow. */
+.mascot img{animation:companion-swim 2.6s cubic-bezier(.37,0,.63,1) infinite}
+@keyframes companion-swim{0%,100%{transform:translateY(0) rotate(-4deg)}25%{transform:translateY(-7px) rotate(2deg) scaleX(.96)}50%{transform:translateY(-2px) rotate(5deg)}75%{transform:translateY(-9px) rotate(-2deg) scaleX(.97)}}
+@keyframes krill-loop{0%{transform:rotate(0)}30%{transform:rotate(-140deg) translateY(-36px) scale(1.15)}60%{transform:rotate(-280deg) translateY(-16px) scale(1.2)}100%{transform:rotate(-360deg)}}
+@keyframes buddy-sad{0%,100%{transform:rotate(24deg) translateY(2px)}50%{transform:rotate(30deg) translateY(9px)}}
+@keyframes buddy-faint{25%{transform:rotate(96deg) translateY(5px)}100%{transform:rotate(178deg) translateY(90px);opacity:.65}}
+.mascot.poked img{animation:companion-roll .9s cubic-bezier(.3,.1,.3,1)}
+@keyframes companion-roll{to{transform:rotate(720deg)}}
+.mascot[data-buddy="schooler"].poked img{animation:companion-dart .85s ease-in-out}
+@keyframes companion-dart{28%{transform:translateX(36px) scaleX(1.15) rotate(7deg)}50%{transform:translateX(44px) scaleX(-1) rotate(-5deg)}78%{transform:translateX(-8px) scaleX(-1.08) rotate(3deg)}}
+.mascot[data-buddy="rare"].poked img{animation:companion-jet 1s ease-in-out}
+@keyframes companion-jet{24%{transform:translateY(8px) scale(1.28,.68)}52%{transform:translateY(-48px) scale(.8,1.32) rotate(-7deg)}76%{transform:translateY(-20px) scale(1.05,.95) rotate(4deg)}}
+.mascot[data-buddy="deepcut"].poked img{animation:companion-chomp .9s cubic-bezier(.3,.1,.3,1)}
+@keyframes companion-chomp{22%{transform:translateX(-7px) scale(.9) rotate(7deg)}42%{transform:translateX(11px) scale(1.24) rotate(-9deg)}58%{transform:translateX(5px) scale(1.02)}74%{transform:translateX(9px) scale(1.18) rotate(-7deg)}}
+.low-power .mascot:not(.poked):not(.celebrate) img{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.mascot img{animation:none!important}}

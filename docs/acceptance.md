@@ -28,3 +28,7 @@ The original site-style footer remains available, with the additional AI documen
 ## Fidelity follow-up
 
 A second pass compared the homepage, all seven answer/descent/landing screens, timer warning, surfacing and results with the reference. Geometry, transitions, six tier effects, synthesized sound envelopes and mobile layouts were recalibrated. A shared seven-input sequence produced 295 on both sites. Full mobile flow also checks the third long question at a 390×480 viewport. Fifteen sound cues plus mute were rendered and checked for audible output, clipping, decay and double-pulse timing. Detailed before/after differences and explicit limits: [fidelity-audit.md](fidelity-audit.md).
+
+## Art and audio refinement
+
+The next pass redraws left-facing shrimp/fish and two other marine companions from reproducible original pixel geometry; recalibrates the boat profile/scale and three cached depth scenery layers; adds formation swimming, per-tier chip tilt, orbit dispersal and landed bubbles; and corrects linear audio attack and visibility handling. Desktop/mobile full flows, a gold-timing scenario, 22 art samples and 15 sound events pass. See [art-polish.md](art-polish.md) for concrete differences and limits.

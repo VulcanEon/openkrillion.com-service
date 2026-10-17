@@ -14,7 +14,8 @@
     "check": "node scripts/audit.mjs",
     "test:browser": "node scripts/browser-audit.mjs",
     "test:audio": "node scripts/audio-audit.mjs",
-    "test:mobile": "node scripts/mobile-flow-audit.mjs"
+    "test:mobile": "node scripts/mobile-flow-audit.mjs",
+    "test:art": "node scripts/art-audit.mjs"
   },
   "devDependencies": {
     "wrangler": "4.151.1",
