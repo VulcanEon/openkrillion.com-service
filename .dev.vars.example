@@ -1,0 +1,4 @@
+# Optional. Local development runs without third-party credentials.
+# Private production bindings belong in an ignored wrangler.production.jsonc.
+# Admin token protects the optional /api/admin/sync endpoint.
+ADMIN_TOKEN=replace-with-a-long-random-value

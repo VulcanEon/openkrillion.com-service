@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "openkrillion-dev",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-17",
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
+  "d1_databases": [{ "binding": "DB", "database_name": "openkrillion", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }],
+  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "openkrillion-assets" }],
+  "vars": { "SITE_URL": "http://localhost:3051", "REFERENCE_SYNC": "false", "LOCAL_DEVELOPMENT": "true" },
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,75 @@
+# OpenKrillion
+
+> An independent open-source Krillion-inspired daily trivia game. Not affiliated with the original Krillion service.
+
+Canonical: https://openkrillion.com/
+Source code (MIT): https://github.com/VulcanEon/openkrillion.com-service
+
+## Play
+Seven open-answer prompts, a 3-second preview, and 25 seconds per answer. Prepared rarity tiers award 10, 15, 30, 60, 85 or 100 points. Seven answers can total 700 points and 7,000 metres.
+
+Choose Begin Descent, read the category, type an answer, press Enter or Dive, confirm a proposed correction if shown, then continue. After round seven, Surface opens the score report and accepted-answer review.
+
+Daily resets at midnight America/New_York. Practice is separate. Guest settings and history have a device-local copy; random browser identifiers and completed game records are held by this service. Comparisons use this site's players only.
+
+## Pages
+- [Play and expandable guide](https://openkrillion.com/)
+- [Chinese help and AI questions](https://openkrillion.com/?lang=zh)
+- [Privacy](https://openkrillion.com/privacy)
+- [About](https://openkrillion.com/about)
+- [Pricing](https://openkrillion.com/pricing.md)
+- [Capabilities](https://openkrillion.com/models.md)
+- [Full reference](https://openkrillion.com/llms-full.txt)
+- [Report a problem](https://github.com/VulcanEon/openkrillion.com-service/issues)
+
+## Limits
+No generative model, credits, payment flow, themed packs, user login or official affiliation. The public source ships a small independently assembled sample bank. Runtime reference snapshots are separate from the MIT application license.
+
+These documents are rendered from the same public product configuration used by the website. Changes take effect on deployment. External AI links only prefill a public question and may require a provider account; answers and indexing are not guaranteed.
+
+---
+
+# OpenKrillion pricing
+
+Canonical: https://openkrillion.com/pricing.md
+
+Current implemented daily and practice games: 0 USD. Free to play.
+
+No checkout, subscription, credit balance, or paid unlock is implemented in this release.
+
+The game has 7 prompts, 25 seconds per answer and a maximum of 700 points. Each point adds 10 metres.
+
+No payment is collected, so no payment refund workflow exists. External AI providers may have their own plans and policies. Third-party hosting costs are not player prices.
+
+Privacy: https://openkrillion.com/privacy
+Source: https://github.com/VulcanEon/openkrillion.com-service
+
+---
+
+# OpenKrillion models and game capabilities
+
+Canonical: https://openkrillion.com/models.md
+
+No generative AI model is available or called by this game. The models.md filename follows the agent documentation convention; this is a trivia game, not an AI generation workspace.
+
+## Available workflows
+- Daily seven-prompt trivia
+- Practice dives
+- Six rarity tiers
+- Typo correction with confirmation
+- Animated ocean descent
+- Synthesized sound effects
+- Score and depth report
+- Answer review
+- Local history and streaks
+- Shareable results
+- Low-power and colorblind modes
+
+Gameplay language: English. Help and AI questions: English and Chinese.
+
+Answers are validated server-side against prepared entries, with normalization, known aliases and conservative typo correction. Reference answer snapshots may differ from the original game in aliases or subsequent edits. Daily reference synchronization uses public endpoints, caches the snapshot in D1, and falls back to a clearly identified sample practice bank when unavailable.
+
+No accounts, multiplayer, themed packs, checkout or cross-device account sync is implemented. Practice does not change the daily score or streak.
+
+Play: https://openkrillion.com/
+Pricing: https://openkrillion.com/pricing.md
