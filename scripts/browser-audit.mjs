@@ -27,7 +27,7 @@ try{
   await page.locator('#answer').fill('zzzzzzzzzz');await page.locator('#answer').press('Enter');await page.waitForFunction(()=>document.getElementById('answer-status').textContent.includes('no echo'));
   await page.locator('#answer').fill('mashed');await page.locator('#answer').press('Enter');await page.waitForFunction(()=>document.getElementById('answer-status').textContent.includes('corrects to'));assert.equal(await page.locator('#answer').inputValue(),'Mashed potatoes');
   await page.locator('#answer').press('Enter');await page.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='landed',{timeout:15000});
-  await page.screenshot({path:output+'/desktop-landing.png'});
+  await page.waitForTimeout(1000);await page.screenshot({path:output+'/desktop-landing.png'});
   const answers=['Mara','Bob Pettit','Yttrium','Ghost station','France','Great Lakes Avengers'];
   for(let i=0;i<answers.length;i++){
     await page.locator('#next-btn').click();await page.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='preview');
@@ -46,8 +46,8 @@ try{
   await mp.goto(base+'/?test=1&lang=zh');await mp.waitForFunction(()=>window.render_game_to_text);await mp.evaluate(()=>document.fonts.ready);await mp.waitForFunction(()=>/DIVE #/.test(document.getElementById('day-number').textContent));await mp.screenshot({path:output+'/mobile-home.png'});
   assert.equal(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   await mp.locator('#guide-link').click();const chinese=await mp.locator('.ai-links a').evaluateAll(as=>as.map(a=>new URL(a.href).searchParams.get('q')));assert.ok(chinese.every(q=>q.includes('用中文回答')));await mp.screenshot({path:output+'/mobile-guide.png'});await mp.locator('#close-guide').click();
-  await mp.locator(local?'#start-btn':'#practice-btn').click({force:true});await mp.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='preview');if(local)await mp.evaluate(()=>window.advanceTime(3100));else await mp.waitForTimeout(3200);await mp.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='answering');await mp.screenshot({path:output+'/mobile-answer.png'});
-  await mp.setViewportSize({width:390,height:480});await mp.waitForTimeout(450);await mp.screenshot({path:output+'/mobile-keyboard-height.png'});const dock=await mp.locator('#answer-form').boundingBox();assert.ok(dock.y+dock.height<=480);assert.ok(dock.y>=0);
+  await mp.locator(local?'#start-btn':'#practice-btn').click({force:true});await mp.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='preview');if(local)await mp.evaluate(()=>window.advanceTime(3100));else await mp.waitForTimeout(3200);await mp.waitForFunction(()=>JSON.parse(window.render_game_to_text()).phase==='answering');await mp.waitForTimeout(700);await mp.screenshot({path:output+'/mobile-answer.png'});
+  await mp.setViewportSize({width:390,height:480});await mp.waitForTimeout(450);await mp.screenshot({path:output+'/mobile-keyboard-height.png'});const dock=await mp.locator('#answer-form').boundingBox();assert.ok(dock.y+dock.height<=480);assert.ok(dock.y>=0);const prompt=await mp.locator('#prompt-card').boundingBox();const hud=await mp.locator('.hud').boundingBox();assert.ok(prompt.y>=hud.y+hud.height+15,'short viewport keeps prompt below the HUD');assert.ok(prompt.y+prompt.height<dock.y-15,'short viewport keeps prompt above input');
   report.push({mobile:'pass',chinesePrompts:'pass',keyboardHeight:'pass'});
   await writeFile(output+'/report.json',JSON.stringify({report,errors},null,2));assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,output,checks:report.map(r=>Object.keys(r)),errors}));
 }finally{await browser.close();}

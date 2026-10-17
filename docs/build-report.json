@@ -1,8 +1,8 @@
 {
   "name": "OpenKrillion",
-  "words": 2485,
+  "words": 2496,
   "krillion": 112,
-  "density": 4.507042253521127,
+  "density": 4.487179487179487,
   "documents": [
     "/llms.txt",
     "/pricing.md",

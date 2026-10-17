@@ -70,7 +70,11 @@ npm test
 npm run build
 npm run check
 node scripts/browser-audit.mjs http://localhost:3051 output/playwright/audit
+npm run test:audio
+npm run test:mobile
 ```
+
+The mobile flow audit runs all seven rounds at 390×844 and checks a long question at 390×480 before restoring the viewport. The audio audit renders synthesized cues through OfflineAudioContext, checks envelopes, clipping, mute and countdown timing, and writes WAV samples under ignored `output/audio/`. The visual fidelity pass and remaining differences are recorded in [docs/fidelity-audit.md](docs/fidelity-audit.md).
 
 The unit/integration suite runs against an in-memory SQLite D1 adapter, including seven-round server scoring, duplicate protection, ownership, CSRF checks, deadline expiry, pause/resume, reference validation, DST rollover, and the documentation/SEO contract. Browser validation uses installed Google Chrome (`channel: chrome`) and covers desktop/mobile, correction/rejection, seven rounds, results/review/share, reload, Chinese AI prompts, and a short mobile viewport. Install Chrome or change the browser channel for your environment. Production browser audits use practice mode to avoid contaminating daily population statistics.
 

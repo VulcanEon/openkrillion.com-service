@@ -1,25 +1,73 @@
-// Original procedural sound design. No audio files or third-party engine code.
+// Independent Web Audio synthesis, calibrated from the reference's audible event design.
+export const SOUND_CUES = {
+  begin: [
+    { noise: true, duration: 1.1, lowpass: 2000, sweep: 240, volume: .15 },
+    { from: 110, to: 48, duration: 1.2, volume: .32 },
+    { from: 784, duration: .5, volume: .12, type: 'triangle', lowpass: 3000 },
+    { from: 523, duration: .75, volume: .12, type: 'triangle', lowpass: 3000, delay: .22 },
+  ],
+  submit: [{ from: 1150, duration: .16, attack: .003, volume: .16 }],
+  reject: [{ noise: true, duration: .22, lowpass: 420, volume: .2 }, { from: 150, to: 62, duration: .36, volume: .22, lowpass: 700 }],
+  tier: [{ from: 780, to: 1560, duration: .07, volume: .13, type: 'triangle', lowpass: 2500 }],
+  sink: [{ from: 1150, duration: .7, attack: .01, volume: .1 }, { noise: true, duration: 1.3, lowpass: 1400, sweep: 180, volume: .16 }, { from: 300, to: 60, duration: 1.3, volume: .1 }],
+  small: [{ from: 140, to: 70, duration: .25, volume: .28, lowpass: 600 }, { noise: true, duration: .14, lowpass: 500, volume: .1 }],
+  big: [{ from: 80, to: 45, duration: .6, volume: .38 }, { noise: true, duration: .7, lowpass: 900, sweep: 200, volume: .18, delay: .02 }, { from: 523, duration: .4, volume: .09, type: 'triangle', delay: .15 }],
+  krillion: [{ from: 60, to: 40, duration: 1.2, volume: .34 }, ...[784, 988, 1175, 1568].map((from, i) => ({ from, duration: .7, volume: .15, type: 'triangle', lowpass: 3000, delay: i * .13 })), { noise: true, duration: 1.4, lowpass: 2500, highpass: 1200, volume: .05, delay: .3 }],
+  miss: [{ from: 220, to: 52, duration: .7, volume: .24 }, { noise: true, duration: .5, lowpass: 400, volume: .14, delay: .05 }],
+  tick: [{ from: 880, duration: .07, volume: .16 }, { from: 880, duration: .05, volume: .06, delay: .12 }],
+  surface: [{ noise: true, duration: 1.6, lowpass: 300, sweep: 3000, volume: .16 }, { from: 80, to: 600, duration: 1.5, volume: .08 }],
+};
 export class Sound {
-  constructor(){this.muted=false;this.ac=null;this.master=null;}
-  async init(){try{if(!this.ac){this.ac=new (window.AudioContext||window.webkitAudioContext)();this.master=this.ac.createGain();this.master.gain.value=this.muted?0:.55;this.master.connect(this.ac.destination);}if(this.ac.state==='suspended')await this.ac.resume();}catch{/* Sound support is optional. */}}
-  mute(value){this.muted=value;if(this.master)this.master.gain.setTargetAtTime(value?0:.55,this.ac.currentTime,.03);}
-  tone(from,to,duration=.25,volume=.15,type='sine',delay=0){if(!this.ac||this.muted)return;const t=this.ac.currentTime+delay,o=this.ac.createOscillator(),g=this.ac.createGain();o.type=type;o.frequency.setValueAtTime(Math.max(1,from),t);o.frequency.exponentialRampToValueAtTime(Math.max(1,to),t+duration);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(g);g.connect(this.master);o.start(t);o.stop(t+duration+.05);}
-  noise(duration=.6,frequency=1000,volume=.1){if(!this.ac||this.muted)return;const n=Math.floor(this.ac.sampleRate*duration),b=this.ac.createBuffer(1,n,this.ac.sampleRate),data=b.getChannelData(0);for(let i=0;i<n;i++)data[i]=(Math.random()*2-1)*(1-i/n);const source=this.ac.createBufferSource(),f=this.ac.createBiquadFilter(),g=this.ac.createGain();source.buffer=b;f.type='lowpass';f.frequency.setValueAtTime(frequency,this.ac.currentTime);f.frequency.exponentialRampToValueAtTime(100,this.ac.currentTime+duration);g.gain.value=volume;source.connect(f);f.connect(g);g.connect(this.master);source.start();}
-  event(name){if(!this.ac||this.muted)return;switch(name){
-    case 'begin':this.tone(440,880,.18,.13,'triangle');this.tone(880,220,.8,.2,'sine',.16);this.noise(1.2,2200,.1);break;
-    case 'submit':this.tone(800,1400,.09,.12,'triangle');this.tone(1400,700,.13,.07,'sine',.06);break;
-    case 'reject':this.tone(180,65,.25,.19,'triangle');break;
-    case 'tick':this.tone(880,880,.065,.11);break;
-    case 'tier':this.tone(700,1350,.07,.08,'triangle');break;
-    case 'sink':this.tone(1050,100,.9,.13);this.noise(1.5,1800,.12);break;
-    case 'plankton':this.tone(290,220,.25,.16);break;
-    case 'tooclever':this.tone(390,260,.3,.13,'triangle');this.tone(330,210,.3,.1,'triangle',.15);break;
-    case 'schooler':this.tone(440,440,.22,.12,'triangle');this.tone(660,660,.28,.1,'triangle',.12);break;
-    case 'rare':[523,659,784].forEach((f,i)=>this.tone(f,f,.45,.12,'sine',i*.09));break;
-    case 'deepcut':[659,784,988,1175].forEach((f,i)=>this.tone(f,f,.6,.12,'sine',i*.1));this.tone(90,45,.9,.18);break;
-    case 'krillion':[784,988,1175,1568].forEach((f,i)=>this.tone(f,f,.8,.13,'sine',i*.12));this.tone(65,40,1.2,.23);this.noise(.7,2800,.07);break;
-    case 'miss':this.tone(220,52,.65,.2);this.noise(.4,450,.09);break;
-    case 'surface':this.tone(110,720,1.6,.13);this.noise(1.5,3200,.07);break;
-    case 'blub':this.tone(480,1300,.08,.15);this.tone(650,230,.15,.1,'sine',.08);break;
-  }}
+  constructor() { this.muted = false; this.ac = null; this.master = null; }
+  async init() {
+    try {
+      if (!this.ac || this.ac.state === 'closed') {
+        this.ac = new (window.AudioContext || window.webkitAudioContext)();
+        this.master = this.ac.createGain(); this.master.gain.value = this.muted ? 0 : .75;
+        this.master.connect(this.ac.destination);
+      }
+      if (this.ac.state === 'suspended') await this.ac.resume();
+    } catch { /* The game remains playable when audio is unavailable. */ }
+  }
+  mute(value) { this.muted = value; if (this.master) this.master.gain.setTargetAtTime(value ? 0 : .75, this.ac.currentTime, .02); }
+  play(cue) {
+    if (!this.ac || this.muted || this.ac.state !== 'running') return;
+    const { duration = .2, volume = .15, delay = 0, attack = .005 } = cue;
+    const t = this.ac.currentTime + delay, gain = this.ac.createGain();
+    gain.gain.setValueAtTime(.0001, t);
+    gain.gain.exponentialRampToValueAtTime(volume, t + attack);
+    gain.gain.exponentialRampToValueAtTime(.0001, t + duration + attack);
+    gain.connect(this.master);
+    let source;
+    if (cue.noise) {
+      source = this.ac.createBufferSource();
+      const buffer = this.ac.createBuffer(1, Math.ceil(this.ac.sampleRate * (duration + .1)), this.ac.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+      source.buffer = buffer;
+    } else {
+      source = this.ac.createOscillator(); source.type = cue.type || 'sine';
+      source.frequency.setValueAtTime(cue.from, t);
+      if (cue.to) source.frequency.exponentialRampToValueAtTime(cue.to, t + duration);
+    }
+    let output = source;
+    if (cue.lowpass || cue.noise) {
+      const filter = this.ac.createBiquadFilter(); filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(cue.lowpass || 1200, t);
+      if (cue.sweep) filter.frequency.exponentialRampToValueAtTime(cue.sweep, t + duration);
+      output.connect(filter); output = filter;
+    }
+    if (cue.highpass) { const filter = this.ac.createBiquadFilter(); filter.type = 'highpass'; filter.frequency.value = cue.highpass; output.connect(filter); output = filter; }
+    output.connect(gain); source.start(t); source.stop(t + duration + attack + .1);
+  }
+  event(name) {
+    const aliases = { plankton: 'small', tooclever: 'small', schooler: 'big', rare: 'big', deepcut: 'big', descend: 'begin' };
+    if (name === 'blub') {
+      const variation = .85 + Math.random() * .45;
+      this.play({ from: 260 * variation, to: 720 * variation, duration: .13, volume: .22, lowpass: 2200 });
+      this.play({ noise: true, duration: .05, lowpass: 1800, highpass: 700, volume: .05 });
+      return;
+    }
+    for (const cue of SOUND_CUES[aliases[name] || name] || []) this.play(cue);
+  }
 }

@@ -11,7 +11,10 @@
     "deploy": "npm run build && wrangler deploy --config wrangler.production.jsonc",
     "db:local": "wrangler d1 migrations apply openkrillion --local",
     "db:remote": "wrangler d1 migrations apply openkrillion --remote --config wrangler.production.jsonc",
-    "check": "node scripts/audit.mjs"
+    "check": "node scripts/audit.mjs",
+    "test:browser": "node scripts/browser-audit.mjs",
+    "test:audio": "node scripts/audio-audit.mjs",
+    "test:mobile": "node scripts/mobile-flow-audit.mjs"
   },
   "devDependencies": {
     "wrangler": "4.151.1",
